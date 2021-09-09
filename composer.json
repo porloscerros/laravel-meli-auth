@@ -1,0 +1,55 @@
+{
+    "name": "porloscerros/laravel-meli-auth",
+    "description": "Authorize your Laravel application by a MercadoLibre user. \n",
+    "keywords": [
+        "porloscerros",
+        "mercadolibre",
+        "laravel-meli-auth"
+    ],
+    "homepage": "https://github.com/porloscerros/laravel-meli-auth",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Pablo Pérez",
+            "email": "porloscerros@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php":"^7.3|^8.0",
+        "illuminate/support":"^8.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^6.0",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Porloscerros\\LaravelMeli\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Porloscerros\\LaravelMeli\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel":{
+            "providers":[
+                "Porloscerros\\Meli\\MeliServiceProvider"
+            ],
+            "aliases":{
+                "Meli":"Porloscerros\\Meli\\Facades\\Meli"
+            }
+        }
+    }
+}
