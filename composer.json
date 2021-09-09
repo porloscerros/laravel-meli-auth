@@ -26,12 +26,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Porloscerros\\LaravelMeli\\": "src"
+            "Porloscerros\\Meli\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Porloscerros\\LaravelMeli\\Tests\\": "tests"
+            "Porloscerros\\Meli\\Tests\\": "tests"
         }
     },
     "scripts": {
