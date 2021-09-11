@@ -5,6 +5,7 @@ namespace Porloscerros\Meli;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
+use Porloscerros\Meli\Events\TokenGetted;
 
 class Meli
 {
@@ -56,6 +57,29 @@ class Meli
         if ($response->failed()) {
             return $response->throw();
         }
+        event(new TokenGetted($response->json()));
+        return $response->json();
+    }
+
+    /*
+     * @param string $refresh_token
+     */
+    public function refreshToken(string $refresh_token)
+    {
+        $url = config('meli.api.token');
+        $data = [
+            'grant_type' => 'refresh_token',
+            'client_id' => $this->client_id,
+            'client_secret' => $this->client_secret,
+            'refresh_token' => $refresh_token,
+        ];
+        $response = Http::asForm()
+            ->accept('application/json')
+            ->post($url, $data);
+        if ($response->failed()) {
+            return $response->throw();
+        }
+        event(new TokenGetted($response->json()));
         return $response->json();
     }
 
