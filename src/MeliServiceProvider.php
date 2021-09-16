@@ -3,8 +3,8 @@
 namespace Porloscerros\Meli;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
 use Porloscerros\Meli\Providers\EventServiceProvider;
+use Porloscerros\Meli\HttpClient\MeliClientServiceProvider;
 
 class MeliServiceProvider extends ServiceProvider
 {
@@ -33,5 +33,6 @@ class MeliServiceProvider extends ServiceProvider
             return new Meli;
         });
         $this->app->register(EventServiceProvider::class);
+        $this->app->register(MeliClientServiceProvider::class);
     }
 }
