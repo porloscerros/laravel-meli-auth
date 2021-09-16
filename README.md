@@ -78,12 +78,12 @@ Every time the token is gotten or refreshed, a TokenGotten event will be fired. 
 
 namespace App\Listeners\Meli;
 
-use Porloscerros\Meli\Events\TokenGetted;
+use Porloscerros\Meli\Events\TokenGotten;
 use Porloscerros\Meli\Facades\Meli;
 
 class SaveCustomerToken
 {
-    public function handle(TokenGetted $event)
+    public function handle(TokenGotten $event)
     {
         // do something with the token...
         $data = $event->token;
