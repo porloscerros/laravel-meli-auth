@@ -5,7 +5,7 @@ namespace Porloscerros\Meli\Events;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 
-class TokenGetted
+class TokenGotten
 {
     use Dispatchable, SerializesModels;
 

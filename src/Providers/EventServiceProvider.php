@@ -3,14 +3,14 @@
 namespace Porloscerros\Meli\Providers;
 
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Porloscerros\Meli\Events\TokenGetted;
+use Porloscerros\Meli\Events\TokenGotten;
 //use Porloscerros\Meli\Listeners\SaveCustomerToken;
 
 class EventServiceProvider extends ServiceProvider
 {
     protected $listen = [
-        TokenGetted::class => [
-        //SaveCustomerToken::class,
+        TokenGotten::class => [
+            //SaveCustomerToken::class,
         ]
     ];
 

@@ -5,21 +5,21 @@ namespace Porloscerros\Meli;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
-use Porloscerros\Meli\Events\TokenGetted;
+use Porloscerros\Meli\Events\TokenGotten;
 
 class Meli
 {
     /*
      * @var string $client_id
-     */ 
+     */
     protected $client_id;
     /*
      * @var string $client_secret
-     */ 
+     */
     protected $client_secret;
     /*
      * @var string $redirectUrl
-     */ 
+     */
     protected $redirectUrl;
 
     public function __construct()
@@ -49,9 +49,6 @@ class Meli
      * de la aplicación. Allí se le presentarán todos los permisos solicitados.
      * Otorgados los permisos el usuario será redireccionado al REDIRECT URI configurado en la aplicación con el authorization code correspondiente.
      *
-
-
-    private $http;
      * @param string $refresh_token
      */
     public function getToken(string $code) :array
@@ -70,7 +67,7 @@ class Meli
         if ($response->failed()) {
             return $response->throw();
         }
-        event(new TokenGetted($response->json()));
+        event(new TokenGotten($response->json()));
         return $response->json();
     }
 
@@ -92,39 +89,33 @@ class Meli
         if ($response->failed()) {
             return $response->throw();
         }
-        event(new TokenGetted($response->json()));
+        event(new TokenGotten($response->json()));
         return $response->json();
     }
 
     /*
-     * @param string $access_token
+     * @param array $access_token
      */
-    public function me(string $access_token) :array
+    public function me(array $access_token) :array
     {
         $url = config('meli.api.endpoints.me');
-        $response = Http::withToken($access_token)
-            ->accept('application/json')
-            ->get($url);
-        if ($response->failed()) {
-            return $response->throw();
-        }
-        return $response->json();
+        return Http::meliClient($access_token)
+            ->get($url)
+            ->throw()
+            ->json();
     }
 
     /*
-     * @param string $access_token
+     * @param array $access_token
      */
-    public function createTestUser(string $access_token) :array
+    public function createTestUser(array $access_token) :array
     {
         $url = config('meli.api.endpoints.create_test_user');
-        $response = Http::withToken($access_token)
-            ->accept('application/json')
+        return Http::meliClient($access_token)
             ->post($url, [
                 'site_id' => 'MLA',
-            ]);
-        if ($response->failed()) {
-            $response->throw();
-        }
-        return $response->json();
+            ])
+            ->throw()
+            ->json();
     }
 }
