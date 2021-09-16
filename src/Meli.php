@@ -9,8 +9,17 @@ use Porloscerros\Meli\Events\TokenGetted;
 
 class Meli
 {
+    /*
+     * @var string $client_id
+     */ 
     protected $client_id;
+    /*
+     * @var string $client_secret
+     */ 
     protected $client_secret;
+    /*
+     * @var string $redirectUrl
+     */ 
     protected $redirectUrl;
 
     public function __construct()
@@ -27,23 +36,27 @@ class Meli
            https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=$APP_ID&state=$RANDOM_ID&redirect_uri=$REDIRECT_URL
      */
 
-    public function getAuthorizationUrl()
+    public function getAuthorizationUrl() :string
     {
-        $url = config('meli.api.authorization');
+        $url = config('meli.api.endpoints.authorization');
         $url = Str::replace('APP_ID', $this->client_id, $url);
         $url = Str::replace('YOUR_URL', $this->redirectUrl, $url);
         return $url;
     }
 
     /*
-     *  Una vez que el usuario inicie sesión será redireccionado a la página de autorización
+     * Una vez que el usuario inicie sesión será redireccionado a la página de autorización
      * de la aplicación. Allí se le presentarán todos los permisos solicitados.
-     *  Otorgados los permisos el usuario será redireccionado al REDIRECT URI configurado en la aplicación con el access token correspondiente:
-            https://YOUR_REDIRECT_URI?code=SERVER_GENERATED_AUTHORIZATION_CODE
+     * Otorgados los permisos el usuario será redireccionado al REDIRECT URI configurado en la aplicación con el authorization code correspondiente.
+     *
+
+
+    private $http;
+     * @param string $refresh_token
      */
-    public function getToken(string $code)
+    public function getToken(string $code) :array
     {
-        $url = config('meli.api.token');
+        $url = config('meli.api.endpoints.token');
         $data = [
             'grant_type' => 'authorization_code',
             'client_id' => $this->client_id,
@@ -64,9 +77,9 @@ class Meli
     /*
      * @param string $refresh_token
      */
-    public function refreshToken(string $refresh_token)
+    public function refreshToken(string $refresh_token) :array
     {
-        $url = config('meli.api.token');
+        $url = config('meli.api.endpoints.token');
         $data = [
             'grant_type' => 'refresh_token',
             'client_id' => $this->client_id,
@@ -83,17 +96,12 @@ class Meli
         return $response->json();
     }
 
-
     /*
-     *  Por seguridad, debes enviar el access token por header cada vez que realices llamadas a la API.
-            Authorization: Bearer APP_USR-12345678-031820-X-12345678
-     *  Y por ejemplo, realizando un GET al recurso /users/me sería:
-            curl -H ‘Authorization: Bearer APP_USR-12345678-031820-X-12345678’ \
-            https://api.mercadolibre.com/users/me
+     * @param string $access_token
      */
-    public function me(string $access_token)
+    public function me(string $access_token) :array
     {
-        $url = config('meli.api.me');
+        $url = config('meli.api.endpoints.me');
         $response = Http::withToken($access_token)
             ->accept('application/json')
             ->get($url);
@@ -103,9 +111,12 @@ class Meli
         return $response->json();
     }
 
-    public function createTestUser(string $access_token)
+    /*
+     * @param string $access_token
+     */
+    public function createTestUser(string $access_token) :array
     {
-        $url = config('meli.api.create_test_user');
+        $url = config('meli.api.endpoints.create_test_user');
         $response = Http::withToken($access_token)
             ->accept('application/json')
             ->post($url, [
