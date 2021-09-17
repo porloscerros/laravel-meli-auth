@@ -1,4 +1,4 @@
-# Authorize your Laravel application by a MercadoLibre user.
+# [wip] Authorize your Laravel application by a MercadoLibre user.
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/porloscerros/laravel-meli.svg?style=flat-square)](https://packagist.org/packages/porloscerros/laravel-meli)
 [![Total Downloads](https://img.shields.io/packagist/dt/porloscerros/laravel-meli.svg?style=flat-square)](https://packagist.org/packages/porloscerros/laravel-meli)
@@ -104,7 +104,7 @@ You will also have a macro available to apply to the Http Client when you go to 
 $response = Http::meliClient($access_token)
     ->get($url);
 ```
-This macro will add the headers with the Bearer token and a middleware, which will refresh the token and repeat the call once, in case the api responds with 401 Unauthorized invalid_token.
+This macro will add the headers with the `Bearer token` and `Accept: application/json` header..
 
 ### Testing
 
