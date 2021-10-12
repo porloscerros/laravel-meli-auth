@@ -4,7 +4,7 @@ namespace Porloscerros\Meli;
 
 use Illuminate\Support\ServiceProvider;
 use Porloscerros\Meli\Providers\EventServiceProvider;
-use Porloscerros\Meli\HttpClient\MeliClientServiceProvider;
+use Porloscerros\Meli\Providers\MeliClientServiceProvider;
 
 class MeliServiceProvider extends ServiceProvider
 {

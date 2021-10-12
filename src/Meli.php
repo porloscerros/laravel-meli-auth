@@ -35,7 +35,6 @@ class Meli
      * En el navegador ingresa la siguiente dirección:
            https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=$APP_ID&state=$RANDOM_ID&redirect_uri=$REDIRECT_URL
      */
-
     public function getAuthorizationUrl() :string
     {
         $url = config('meli.api.endpoints.authorization');
@@ -47,9 +46,10 @@ class Meli
     /*
      * Una vez que el usuario inicie sesión será redireccionado a la página de autorización
      * de la aplicación. Allí se le presentarán todos los permisos solicitados.
-     * Otorgados los permisos el usuario será redireccionado al REDIRECT URI configurado en la aplicación con el authorization code correspondiente.
+     * Otorgados los permisos el usuario será redireccionado al REDIRECT URI configurado en la aplicación
+     * con el authorization code correspondiente.
      *
-     * @param string $refresh_token
+     * @param string $code
      */
     public function getToken(string $code) :array
     {
@@ -63,10 +63,8 @@ class Meli
         ];
         $response = Http::asForm()
             ->accept('application/json')
-            ->post($url, $data);
-        if ($response->failed()) {
-            return $response->throw();
-        }
+            ->post($url, $data)
+            ->throw();
         event(new TokenGotten($response->json()));
         return $response->json();
     }
@@ -85,10 +83,8 @@ class Meli
         ];
         $response = Http::asForm()
             ->accept('application/json')
-            ->post($url, $data);
-        if ($response->failed()) {
-            return $response->throw();
-        }
+            ->post($url, $data)
+            ->throw();
         event(new TokenGotten($response->json()));
         return $response->json();
     }
