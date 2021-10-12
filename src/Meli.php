@@ -40,6 +40,7 @@ class Meli
         $url = config('meli.api.endpoints.authorization');
         $url = Str::replace('APP_ID', $this->client_id, $url);
         $url = Str::replace('YOUR_URL', $this->redirectUrl, $url);
+        $url .= "&state=".md5(config('meli.api.state'));
         return $url;
     }
 
@@ -51,8 +52,10 @@ class Meli
      *
      * @param string $code
      */
-    public function getToken(string $code) :array
+    public function getToken(string $code, string $state = '') :array
     {
+        if ($state !== '' && $state !== md5(config('meli.api.state')))
+            throw new \Exception("El state $state en la respuesta no coincide con el enviado. Ref: https://developers.mercadolibre.com.ar/es_ar/autenticacion-y-autorizacion");
         $url = config('meli.api.endpoints.token');
         $data = [
             'grant_type' => 'authorization_code',
