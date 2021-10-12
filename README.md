@@ -81,7 +81,7 @@ namespace App\Listeners\Meli;
 use Porloscerros\Meli\Events\TokenGotten;
 use Porloscerros\Meli\Facades\Meli;
 
-class DoSomethingWithToken
+class TokenListener
 {
     public function handle(TokenGotten $event)
     {
@@ -93,7 +93,7 @@ class DoSomethingWithToken
 }
 ```
 
-You will also have a macro available to apply to HTTP customer when you call the MercadoLibre API.
+You will also have a macro available to apply to HTTP Client when you call the MercadoLibre API.
 ```php
 $response = Http::meliClient($access_token)
     ->get($url);
@@ -127,7 +127,3 @@ If you discover any security related issues, please email porloscerros@gmail.com
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
