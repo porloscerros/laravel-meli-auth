@@ -3,6 +3,7 @@
 namespace Porloscerros\Meli;
 
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Porloscerros\Meli\Events\TokenGotten;
@@ -35,12 +36,14 @@ class Meli
      * En el navegador ingresa la siguiente dirección:
            https://auth.mercadolibre.com.ar/authorization?response_type=code&client_id=$APP_ID&state=$RANDOM_ID&redirect_uri=$REDIRECT_URL
      */
-    public function getAuthorizationUrl() :string
+    public function getAuthorizationUrl(string $state = null) :string
     {
         $url = config('meli.api.endpoints.authorization');
         $url = Str::replace('APP_ID', $this->client_id, $url);
         $url = Str::replace('YOUR_URL', $this->redirectUrl, $url);
-        $url .= "&state=".md5(config('meli.api.state'));
+        $state = $state ??  uniqid();
+        $url .= "&state=".$state;
+        Cache::put("authorization-url-{$state}", $state, 1200);
         return $url;
     }
 
@@ -52,10 +55,11 @@ class Meli
      *
      * @param string $code
      */
-    public function getToken(string $code, string $state = '') :array
+    public function getToken(string $code, $state = null) :array
     {
-        if ($state !== '' && $state !== md5(config('meli.api.state')))
-            throw new \Exception("El state $state en la respuesta no coincide con el enviado. Ref: https://developers.mercadolibre.com.ar/es_ar/autenticacion-y-autorizacion");
+        if ($state && !Cache::has("authorization-url-{$state}"))
+            throw new \Exception("Meli Auth: The state {$state} in the response does not match the one sent. Ref: https://developers.mercadolibre.com.ar/es_ar/autenticacion-y-autorizacion");
+        Cache::forget("authorization-url-{$state}");
         $url = config('meli.api.endpoints.token');
         $data = [
             'grant_type' => 'authorization_code',
@@ -75,7 +79,7 @@ class Meli
     /*
      * @param string $refresh_token
      */
-    public function refreshToken(string $refresh_token) :array
+    public function refreshToken(string $refresh_token) :array //recibir array igual que en las demás
     {
         $url = config('meli.api.endpoints.token');
         $data = [
